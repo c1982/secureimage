@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"secureimage"
 )
 
 func main() {
-
-	trusted, err := secureimage.Check("bad.jpg")
+	trusted, err := secureimage.Check(os.Args[1])
 
 	if err != nil {
 		panic(err)
