@@ -105,6 +105,7 @@ func matchMime(data []byte, ext string) bool {
 }
 
 func firstByteNonWhiteSpace(data []byte) (nonws int) {
+
 	nonws = 0
 	for ; nonws < len(data) && isWhiteSpace(data[nonws]); nonws++ {
 	}
