@@ -17,7 +17,7 @@ const (
 )
 
 var (
-	errUnknowExtension = errors.New("unknow file extension")
+	errUnknowExtension = errors.New("unknown file extension")
 	errImageFileFormat = errors.New("invalid image format")
 	signs              map[string][][]byte
 	extensions         []string
