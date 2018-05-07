@@ -40,7 +40,7 @@ func main() {
 
 - [x] Magic Bytes check
 - [x] Validate image file format
-- [ ] Clean exif data in jpeg format
+- [x] Clean exif data in jpeg format
 
 ## Credits
 

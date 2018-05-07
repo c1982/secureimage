@@ -3,6 +3,7 @@ package secureimage
 import (
 	"bytes"
 	"errors"
+	"image"
 	"image/gif"
 	"image/jpeg"
 	"image/png"
@@ -59,20 +60,54 @@ func Check(imagefile string) (trusted bool, err error) {
 		return trusted, errImageFileFormat
 	}
 
-	return checkIt(f, ext)
+	img, err := checkIt(f, ext)
+
+	if err != nil {
+		return trusted, err
+	}
+
+	return cleanIt(imagefile, ext, img)
 }
 
-func checkIt(f *os.File, ext string) (isok bool, err error) {
+func checkIt(f *os.File, ext string) (img image.Image, err error) {
 
 	f.Seek(0, 0)
 
 	switch ext {
 	case ".png":
-		_, err = png.Decode(f)
+		img, err = png.Decode(f)
 	case ".jpg", ".jpeg":
-		_, err = jpeg.Decode(f)
+		img, err = jpeg.Decode(f)
 	case ".gif":
-		_, err = gif.Decode(f)
+		img, err = gif.Decode(f)
+	default:
+		err = errUnknowExtension
+	}
+
+	if err != nil {
+		return img, err
+	}
+
+	return img, nil
+}
+
+func cleanIt(filename, ext string, img image.Image) (isok bool, err error) {
+
+	cleaned, err := os.Create(filename)
+
+	if err != nil {
+		return false, err
+	}
+
+	defer cleaned.Close()
+
+	switch ext {
+	case ".png":
+		err = png.Encode(cleaned, img)
+	case ".jpg", ".jpeg":
+		err = jpeg.Encode(cleaned, img, nil)
+	case ".gif":
+		err = gif.Encode(cleaned, img, nil)
 	default:
 		err = errUnknowExtension
 	}
